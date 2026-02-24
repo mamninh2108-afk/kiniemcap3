@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Câu Chuyện A3</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Arial', system-ui, sans-serif;
+            background-color: #bab8ad;
+            margin: 0;
+            padding: 20px 16px 40px;
+            overflow-x: hidden;
+        }
+
+        /* thanh điều hướng giữ nguyên style cũ, chỉ căn giữa mượt hơn */
+        .hai {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .hai ul {
+            list-style: none;
+            display: inline-flex;
+            flex-wrap: wrap;
+            gap: 8px 20px;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(3px);
+            padding: 12px 28px;
+            border-radius: 60px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+        .hai li a {
+            text-decoration: none;
+            color: #2c3e50;
+            font-weight: 600;
+            font-size: 1.2rem;
+            padding: 6px 12px;
+            border-radius: 40px;
+            transition: all 0.3s ease;
+            background-color: transparent;
+            display: inline-block;
+        }
+        .hai li a:hover {
+            background-color: #df7373;
+            color: white;
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+
+        header {
+            text-align: center;
+            margin: 20px 0 40px;
+            animation: slideUp ease forwards;
+        }
+        h1 {
+            color: #c81515;
+            max-width: 900px;
+            margin: 0 auto;
+            font-size: clamp(22px, 6vw, 32px);
+            font-weight: 700;
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.2);
+            line-height: 1.4;
+            padding: 0 10px;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        section {
+            margin-bottom: 4rem;
+        }
+
+        h2 {
+            color: #0f0c0c;
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            line-height: 1.8;
+            color: #201b1b;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+            font-size: 1.15rem;
+            padding: 0 12px;
+        }
+
+        /* khung ảnh flex reponsive giữ nguyên ảnh gốc */
+        .chi {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 24px 20px;
+            margin-top: 30px;
+        }
+
+        .anhlop {
+            width: 300px;
+            height: 300px;
+            border-radius: 20px;
+            box-shadow: 0 20px 35px -8px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.1), box-shadow 0.4s;
+            background-color: #f0ebe1;
+            flex-shrink: 0;
+        }
+
+        .anhlop img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+
+        .anhlop:hover {
+            transform: scale(1.02) translateY(-6px);
+            box-shadow: 0 32px 50px -12px black;
+        }
+
+        .anhlop:hover img {
+            transform: scale(1.08);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 70px;
+            color: #4a4a4a;
+            font-style: italic;
+            border-top: 1px dashed #9a8f7a;
+            padding-top: 30px;
+        }
+
+        /* ===== HIỆU ỨNG CUỘN MỚI – MƯỢT & TINH TẾ ===== */
+        .reveal {
+            opacity: 0;
+            filter: blur(5px);
+            transform: translateY(40px) scale(0.98);
+            transition: opacity 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+                        transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                        filter 0.7s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            filter: blur(0);
+            transform: translateY(0) scale(1);
+        }
+
+        /* hiệu ứng riêng cho từng ảnh hơi nhún nhẹ khi active (tuỳ chọn) */
+        .active .anhlop {
+            animation: popFade 0.5s ease backwards;
+        }
+        .active .anhlop:nth-child(1) { animation-delay: 0.05s; }
+        .active .anhlop:nth-child(2) { animation-delay: 0.15s; }
+        .active .anhlop:nth-child(3) { animation-delay: 0.25s; }
+
+        @keyframes popFade {
+            0% { opacity: 0.4; transform: scale(0.95); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* đoạn văn xuất hiện hơi shift nhẹ theo thứ tự ưu tiên */
+        .active h2 {
+            animation: slideUp 0.6s ease forwards;
+        }
+        .active p {
+            animation: slideUp 0.7s ease forwards;
+        }
+
+        @keyframes slideUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* tối ưu mượt trên di động */
+        @media (prefers-reduced-motion: reduce) {
+            .reveal, .anhlop, .anhlop img {
+                transition: none;
+                animation: none;
+            }
+        }
+
+        /* giữ nguyên màu link cũ */
+        .hai li a {
+            color: #1f4a7a; 
+        }
+        #anhlop {
+            background-image: url(./anh/70C3F8B4-9B08-4E02-9813-CEA994CB2E11.jpg);
+            background-position-Y: -20px;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-attachment: fixed;
+        }
+    </style>
+</head>
+<body>
+    <nav class="hai">
+        <ul>
+            <li><a href="index.html">Trang Chủ</a></li>
+            <li><a href="gioithieu.html">Thành Viên</a></li>
+            <li><a href="cauchuyen.html">Tổng Quan</a></li>
+            <li><a href="tongquan.html">Kỉ Niệm</a></li>
+        </ul>
+    </nav>
+
+    <header>
+        <h1 class="reveal">
+            “A3-K57 – Không chỉ là một lớp học, mà là thanh xuân rực rỡ nhất chúng ta từng có.” 🔥✨
+        </h1>
+    </header>
+
+    <main>
+        <!-- Lớp 10 -->
+        <section>
+            <div class="reveal">
+                <h2>Lớp 10: Khởi đầu</h2>
+                <p>Là những bồi hồi về những ngày tháng đầu tiên của tuổi học trò, khi chúng ta còn chưa biết mình muốn gì, chỉ biết rằng mình đang ở một nơi mới mẻ và đầy hứa hẹn.</p>
+                <p>Chúng mình đã có khoảnh khắc đáng nhớ khi bắt đầu hành trình học tập mới, cùng nhau khám phá những điều mới mẻ và tạo nên những kỷ niệm đẹp.</p>
+                <div class="chi">
+                    <div class="anhlop">
+                        <a href="anh.html">
+                            <img src="./anh/TK lớp 10.JPG" alt="Ảnh Lớp 10" loading="lazy">
+                        </a>
+                    </div>
+                    <div class="anhlop">
+                        <a href="anh.html">
+                            <img src="./anh/TK lớp 10 nè.JPG" alt="Ảnh Lớp 10" loading="lazy">
+                        </a>
+                    </div>
+                    <div class="anhlop">
+                        <a href="anh.html">
+                            <img src="./anh/đi ăn 20_11 (10).JPG" alt="Ảnh Lớp 10" loading="lazy">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Lớp 11 -->
+        <section>
+            <div class="reveal">
+                <h2>Lớp 11: Những bước tiến mới</h2>
+                <p>Đến lớp 11, chúng ta đã có những bước tiến rõ rệt trong học tập và cuộc sống. Những năm tháng này mang đến cho chúng ta nhiều trải nghiệm quý giá và kỷ niệm đáng nhớ.</p>
+                <p>Chúng ta đã cùng nhau vượt qua những thử thách, cùng nhau trưởng thành và xây dựng những tình bạn bền chặt hơn bao giờ hết.</p>
+                <div class="chi">
+                    <div class="anhlop">
+                        <a href="anh.html">
+                            <img src="./anh/IMG_7289.JPG" alt="Ảnh Lớp 11" loading="lazy">
+                        </a>
+                    </div>
+                    <div class="anhlop">
+                        <a href="anh.html">
+                            <img src="./anh/IMG_9655.PNG" alt="Ảnh Lớp 11" loading="lazy">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Lớp 12 -->
+        <section>
+            <div class="reveal">
+                <h2>Lớp 12: Hành trình kết thúc</h2>
+                <p>Chúng ta đã cùng nhau trải qua những năm tháng cuối cùng của tuổi học trò. Những kỷ niệm đẹp đẽ và những bài học quý báu sẽ mãi là một phần không thể thiếu trong hành trình cuộc đời của mỗi người.</p>
+                <p>Chúng ta đã cùng nhau chuẩn bị cho những bước đi tiếp theo, hướng tới tương lai với niềm tin và hy vọng.</p>
+                <div class="chi">
+                    <div class="anhlop">
+                        <a href="anh.html">
+                            <img src="./anh/z7021732607638_430234cc1eca41c3c3a0bce97821d68c.jpg" alt="Ảnh Lớp 12" loading="lazy">
+                        </a>
+                    </div>
+                    <div class="anhlop">
+                        <a href="anh.html">
+                            <img src="./anh/IMG_7272.JPG" alt="Ảnh Lớp 12" loading="lazy">
+                        </a>
+                    </div>
+                    <div class="anhlop" id="anhlop">
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Kỉ Niệm Tuổi Thanh Xuân</p>
+    </footer>
+
+    <script>
+        (function() {
+            // Intersection Observer mượt hơn, threshold linh hoạt
+            const revealElements = document.querySelectorAll('.reveal');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // thêm class active để hiện lên mượt
+                        entry.target.classList.add('active');
+                        
+                        // (tuỳ chọn) nếu muốn chỉ một lần, có thể unobserve sau khi active
+                        // nhưng giữ lại để nếu resize cực mạnh vẫn visible
+                    }
+                });
+            }, {
+                threshold: 0.15,          // chỉ cần 15% lộ ra là kích hoạt
+                rootMargin: "0px 0px -30px 0px"  // hơi nhạy một chút nhưng rất tự nhiên
+            });
+
+            revealElements.forEach(el => observer.observe(el));
+
+            // Thêm hiệu ứng cho header active luôn khi load (nếu đang ở viewport)
+            // Kích hoạt thủ công lần đầu cho những phần tử đã visible
+            window.addEventListener('load', () => {
+                revealElements.forEach(el => {
+                    const rect = el.getBoundingClientRect();
+                    const windowHeight = window.innerHeight;
+                    if (rect.top < windowHeight * 0.85 && rect.bottom > 0) {
+                        el.classList.add('active');
+                    }
+                });
+            });
+
+            // Cũng có thể dùng scroll nhẹ nhưng intersection là đủ
+            // KHÔNG thay đổi bất kỳ nội dung hay đường dẫn ảnh
+        })();
+    </script>
+
+    <!-- vì giữ nguyên nội dung nên các link ảnh vẫn như cũ, đảm bảo không mất mát gì -->
+    <!-- chỉ bổ sung loading="lazy" cho ảnh nhẹ nhàng hơn nhưng không ảnh hưởng nội dung -->
+</body>
+</html>
